@@ -14,18 +14,26 @@ jobs:
   deploy:
     name: Deploy to BOL Webspace
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3
-      - name: Setup NodeJS v12
-        uses: actions/setup-node@v2
-        with:
-          node-version: 12
-        run: npm ci
-      - name: Build with Parcel 
-        run: npm build
-      - name: Deploy to Webspace
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
+
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+      
+    - name: 🔨 Build Project
+      run: |
+        npm ci
+        npm run build
+    
+    - name: Deploy to BOL Webspace
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
         server: webspace.bol.ucla.edu
-        username: chrismilan
+        username: chrismilan 
         password: ${{ secrets.ftp_password }}
         server-dir: public_html/
         local-dir: dist/
+
