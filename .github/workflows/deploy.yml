@@ -1,0 +1,32 @@
+name: Deploy on Push
+
+concurrency: 
+  group: production
+  cancel-in-progress: true
+
+on:
+  push: 
+    branches: 
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to BOL Webspace
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout latest code
+        uses: actions/checkout@v3
+      - name: Setup NodeJS v12
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - run: npm ci
+      - name: Build with Parcel 
+        run: npm build
+      - name: Deploy to Webspace
+        server: webspace.bol.ucla.edu
+        username: chrismilan
+        password: ${{ secrets.ftp_password }}
+        server-dir: public_html/
+        local-dir: dist/
