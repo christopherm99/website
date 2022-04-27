@@ -15,7 +15,7 @@ jobs:
     name: Deploy to BOL Webspace
     runs-on: ubuntu-latest
     steps: 
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Setup NodeJS v12
         uses: actions/setup-node@v2
         with:
